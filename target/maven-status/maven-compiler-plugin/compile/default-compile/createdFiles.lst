@@ -1,7 +1,9 @@
-edu/northeastern/course/TheCodeCommandos/Controllers/LoginController.class
 edu/northeastern/course/TheCodeCommandos/Controllers/Admin/AdminController.class
-module-info.class
-edu/northeastern/course/TheCodeCommandos/Views/ViewFactory.class
 edu/northeastern/course/TheCodeCommandos/Controllers/Client/ClientController.class
 edu/northeastern/course/TheCodeCommandos/Models/Model.class
+edu/northeastern/course/TheCodeCommandos/Controllers/Client/DashboardController.class
+edu/northeastern/course/TheCodeCommandos/Controllers/LoginController.class
+module-info.class
+edu/northeastern/course/TheCodeCommandos/Controllers/Client/ClientMenuController.class
+edu/northeastern/course/TheCodeCommandos/Views/ViewFactory.class
 edu/northeastern/course/TheCodeCommandos/App.class

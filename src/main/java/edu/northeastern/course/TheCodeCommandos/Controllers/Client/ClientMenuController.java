@@ -1,8 +1,12 @@
 package edu.northeastern.course.TheCodeCommandos.Controllers.Client;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 
-public class ClientMenuController {
+public class ClientMenuController implements Initializable {
 	
 	public Button dashboard_btn;
     public Button my_projects_btn;
@@ -11,4 +15,8 @@ public class ClientMenuController {
     public Button logout_btn;
     public Button report_btn;
     
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    }
 }
