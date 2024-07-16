@@ -1,0 +1,65 @@
+/* 修改头部样式 */
+.header {
+    -fx-background-color: #f0f0f0;
+    -fx-padding: 90;
+}
+
+/* 修改导航按钮样式 */
+.nav-button {
+    -fx-background-color: #0078d7; /* 有效的颜色值 */
+    -fx-text-fill: green; /* 有效的颜色值 */
+}
+
+/* 修改月份标签样式 */
+.month-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* 修改星期几标签样式 */
+.week-day-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-alignment: center;
+    -fx-min-width: 40px; /* 标签最小宽度 */
+    -fx-min-height: 30px; /* 标签最小高度 */
+    -fx-alignment: CENTER;
+}
+
+/* 修改滚动窗格样式 */
+.calendar-scroll-pane {
+    -fx-padding: 10;
+}
+
+/* 修改日期容器样式 */
+.day-container {
+    -fx-background-color: #ffffff; /* 有效的颜色值 */
+    -fx-padding: 10;
+    -fx-hgap: 10; /* 水平间隙 */
+    -fx-vgap: 10; /* 垂直间隙 */
+}
+
+/* 修改日期框样式 */
+.day-box {
+    -fx-background-color: #e0e0e0; /* 有效的颜色值 */
+    -fx-padding: 5;
+    -fx-alignment: center;
+    -fx-min-width: 40px; /* 日期框最小宽度 */
+    -fx-min-height: 40px; /* 日期框最小高度 */
+    -fx-pref-width: 100%; /* 使日期框宽度可变 */
+    -fx-pref-height: 100%; /* 使日期框高度可变 */
+}
+
+/* 修改当前日期样式 */
+.current-day {
+    -fx-background-color: #ff0000; /* 有效的颜色值 */
+    -fx-text-fill: white; /* 有效的颜色值 */
+}
+
+/* 修改事件标签样式 */
+.event-label {
+    -fx-background-color: #0078d7; /* 有效的颜色值 */
+    -fx-text-fill: white; /* 有效的颜色值 */
+    -fx-cursor: hand; /* 鼠标悬停时显示手型光标 */
+}

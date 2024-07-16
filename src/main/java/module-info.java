@@ -5,6 +5,7 @@ module edu.northeastern.course.TheCodeCommandos {
     requires java.sql; 
     requires org.xerial.sqlitejdbc;
 	requires javafx.graphics;
+	requires javafx.base;
 
 
     opens edu.northeastern.course.TheCodeCommandos to javafx.fxml;

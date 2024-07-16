@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <left>
+        <fx:include source="SideBar.fxml" />
+    </left>
+   <center>
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="850.0" styleClass="accent" stylesheets="@../../Styles/cupertino-light.css">
+         <children>
+            <VBox layoutX="6.0" layoutY="6.0" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="To-do" />
+                  <HBox alignment="BOTTOM_LEFT" depthTest="DISABLE" prefHeight="30.0" prefWidth="100.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="+ Add a card" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox layoutX="106.0" layoutY="6.0" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Doing" />
+                  <HBox alignment="BOTTOM_LEFT" prefHeight="30.0" prefWidth="100.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="+ Add a card" wrappingWidth="74.888671875" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox layoutX="206.0" layoutY="6.0" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Done" />
+                  <HBox alignment="BOTTOM_LEFT" prefHeight="30.0" prefWidth="100.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="+ Add a card" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox layoutX="469.0" layoutY="6.0" prefHeight="200.0" prefWidth="131.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="+ Add another list" />
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
