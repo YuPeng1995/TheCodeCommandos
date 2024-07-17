@@ -2,73 +2,58 @@ package edu.northeastern.course.TheCodeCommandos.Views;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+/**
+ * Create a view factory which contains methods to show different page
+ */
 public class ViewFactory {
 	
-	private AnchorPane dashboardView;
-	private AnchorPane membersView;
+	public ViewFactory() {}
 	
-	public ViewFactory() {};
-	
-//	public AnchorPane getDashboardView() {
-//		if (dashboardView != null) {
-//			try {
-//				dashboardView = new FXMLLoader(getClass().getResource("/Fxml/Client/Dashboard.fxml")).load();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		return dashboardView;
-//	}
-//	
-//	public AnchorPane getMembersView() {
-//		if (membersView != null) {
-//			try {
-//				membersView = new FXMLLoader(getClass().getResource("/Fxml/Client/Members.fxml")).load();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		return membersView;
-//	}
-	
+	// Show login window
 	public void showLoginWindow() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Login.fxml"));
 		createStage(loader);
 	}
-	
+
+	// Show dashboard window
 	public void showDashboardWindow() {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Dashboard.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Dashboard.fxml"));
 		createStage(loader);
 	}
-	
+
+	// Show members window
 	public void showMembersWindow() {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Members.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Members.fxml"));
 		createStage(loader);
 	}
-	
+
+	// Show table window
 	public void showTableWindow() {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Table.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Table.fxml"));
 		createStage(loader);
 	}
-	
+
+	// Show calendar window
 	public void showCalendarWindow() {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Calendar.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Calendar.fxml"));
 		createStage(loader);
 	}
-	
-	public void showBoard_1Window() {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Board.fxml"));
+
+	// Show board window
+	public void showBoardWindow(String boardTitle) {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Board.fxml"));
 		createStage(loader);
 	}
-	
+
+	// Show new board window
 	public void showNewBoardWindow() {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/NewBoard.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/NewBoard.fxml"));
 		createStage(loader);
 	}
 	
+	// Create stage based on loader
 	public void createStage(FXMLLoader loader) {
 		Scene scene = null;
 		try {
@@ -82,6 +67,7 @@ public class ViewFactory {
 		stage.show();
 	}
 	
+	// Close stage
 	public void closeStage(Stage stage) {
 		stage.close();
 	}
