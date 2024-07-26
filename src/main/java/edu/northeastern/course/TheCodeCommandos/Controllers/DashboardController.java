@@ -53,9 +53,8 @@ public class DashboardController implements Initializable {
 
     // Get boards from database and display them in the dashboard
     private void initBoards() {
-        if (Model.getInstance().getBoards().isEmpty()) {
-            Model.getInstance().setBoards(Model.getInstance().getBoards());
-        }
+        Model.getInstance().getBoards().clear();
+        Model.getInstance().setBoards(Model.getInstance().getBoards());
 
         for (Board b: Model.getInstance().getBoards()) {
             VBox vBox = new VBox();
@@ -72,9 +71,8 @@ public class DashboardController implements Initializable {
 
     // Get all the Done cards from database and display them in the listview
     private void initDoneCards() {
-        if (Model.getInstance().getAllDoneCards().isEmpty()) {
-            Model.getInstance().setAllDoneCards();
-        }
+        Model.getInstance().getAllDoneCards().clear();
+        Model.getInstance().setAllDoneCards();
         for (Card c: Model.getInstance().getAllDoneCards()) {
             cards_listview.getItems().add(c.cardNameProperty().getValue());
         }
@@ -87,11 +85,21 @@ public class DashboardController implements Initializable {
         Model.getInstance().getViewFactory().showNewBoardWindow();
     }
 
-    // Close the current window and turn to board window
+    // Close the current window and open the board window
     private void toBoard(String boardTitle) {
-        Stage stage = (Stage)user_name.getScene().getWindow();
-        Model.getInstance().getViewFactory().closeStage(stage);
-        Model.getInstance().getViewFactory().showBoardWindow(boardTitle);
+        Board selectedBoard = Model.getInstance().getBoards().stream()
+                .filter(b -> b.boardTitleProperty().get().equals(boardTitle))
+                .findFirst()
+                .orElse(null);
+
+        if (selectedBoard != null) {
+            Model.getInstance().setCurrentBoard(selectedBoard);
+            Stage stage = (Stage)user_name.getScene().getWindow();
+            Model.getInstance().getViewFactory().closeStage(stage);
+            Model.getInstance().getViewFactory().showBoardWindow();
+        } else {
+            System.err.println("Selected board not found.");
+        }
     }
 
 }

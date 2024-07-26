@@ -1,8 +1,15 @@
 package edu.northeastern.course.TheCodeCommandos.Views;
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+
+import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * Create a view factory which contains methods to show different page
@@ -42,7 +49,7 @@ public class ViewFactory {
 	}
 
 	// Show board window
-	public void showBoardWindow(String boardTitle) {
+	public void showBoardWindow() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Board.fxml"));
 		createStage(loader);
 	}
@@ -70,6 +77,38 @@ public class ViewFactory {
 	// Close stage
 	public void closeStage(Stage stage) {
 		stage.close();
+	}
+
+	// Add a new card to the list
+    public Optional<Pair<String, LocalDate>> addCard() {
+		Dialog<Pair<String, LocalDate>> dialog = new Dialog<>();
+		dialog.setTitle("Add Card");
+
+		GridPane pane = new GridPane();
+		pane.setHgap(10);
+		pane.setVgap(10);
+		pane.setPadding(new Insets(20, 150, 10, 10));
+
+		TextField cardNameField = new TextField();
+		DatePicker datePicker = new DatePicker();
+
+		pane.add(new Label("Card Name:"), 0, 0);
+		pane.add(cardNameField, 1, 0);
+		pane.add(new Label("Due Date:"), 0, 1);
+		pane.add(datePicker, 1, 1);
+
+		dialog.getDialogPane().setContent(pane);
+		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+		dialog.setResultConverter(dialogButton -> {
+			if (dialogButton == ButtonType.OK) {
+				return new Pair<>(cardNameField.getText(), datePicker.getValue());
+			}
+			return null;
+		});
+
+		return dialog.showAndWait();
+
 	}
 
 }

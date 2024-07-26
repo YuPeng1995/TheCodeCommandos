@@ -11,15 +11,15 @@ public class Card {
     // Data field for Board
     private final StringProperty cardName;
     private final StringProperty status;
-    private final StringProperty label;
     private final ObjectProperty<LocalDate> dueDate;
+    private final StringProperty board;
 
     // Constructor
-    public Card(String cardName, String status, String label, LocalDate dueDate) {
+    public Card(String cardName, String status, LocalDate dueDate, String board) {
         this.cardName = new SimpleStringProperty(this, "Default_card_name", cardName);
         this.status = new SimpleStringProperty(this, "To-do", status);
-        this.label = new SimpleStringProperty(this, "Default_label", label);
         this.dueDate = new SimpleObjectProperty<>(this, "Date", dueDate);
+        this.board = new SimpleStringProperty(this, "Default_board", board);
     }
 
     // Four getter methods
@@ -27,8 +27,8 @@ public class Card {
 
     public StringProperty statusProperty() {return status;}
 
-    public StringProperty labelProperty() {return label;}
-
     public ObjectProperty<LocalDate> dueDateProperty() {return dueDate;}
+
+    public StringProperty boardProperty() {return board;}
 
 }

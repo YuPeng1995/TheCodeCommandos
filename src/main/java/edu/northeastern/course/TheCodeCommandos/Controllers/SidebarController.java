@@ -37,6 +37,7 @@ public class SidebarController implements Initializable {
 
     // Set up sidebar choice box
     private void setBoardsChoiceBox() {
+        Model.getInstance().getBoards().clear();
         boards_choice_box.setValue("Your Boards");
         if (Model.getInstance().getBoards().isEmpty())
             Model.getInstance().setBoards(Model.getInstance().getBoards());
@@ -68,12 +69,23 @@ public class SidebarController implements Initializable {
     	closeStage();
     	Model.getInstance().getViewFactory().showCalendarWindow();
     }
-
+    
     // Close the current window and open the board window
     private void toBoard(String boardTitle) {
-    	closeStage();
-    	Model.getInstance().getViewFactory().showBoardWindow(boardTitle);
+        Board selectedBoard = Model.getInstance().getBoards().stream()
+                .filter(b -> b.boardTitleProperty().get().equals(boardTitle))
+                .findFirst()
+                .orElse(null);
+
+        if (selectedBoard != null) {
+            Model.getInstance().setCurrentBoard(selectedBoard);
+            closeStage();
+            Model.getInstance().getViewFactory().showBoardWindow();
+        } else {
+            System.err.println("Selected board not found.");
+        }
     }
+
 
     // Close the current window and open the new board window
     private void toNewBoard() {

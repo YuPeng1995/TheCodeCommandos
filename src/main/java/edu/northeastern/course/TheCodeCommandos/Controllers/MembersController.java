@@ -3,8 +3,6 @@ package edu.northeastern.course.TheCodeCommandos.Controllers;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import edu.northeastern.course.TheCodeCommandos.Models.Member;
 import edu.northeastern.course.TheCodeCommandos.Models.Model;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -37,13 +35,9 @@ public class MembersController implements Initializable {
 	private void initMembers() {
 		Model.getInstance().getAllMembers().clear();
 		Model.getInstance().setAllMembers();
-		ObservableList<BorderPane> members = FXCollections.observableArrayList();
-		if (members.size() != Model.getInstance().getAllMembers().size()) {
-			for (Member m: Model.getInstance().getAllMembers()) {
-				members.add(createNewBorderPane(m));
-			}
+		for (Member m: Model.getInstance().getAllMembers()) {
+			members_listview.getItems().add(createNewBorderPane(m));
 		}
-		members_listview.setItems(members);
 	}
 
 	// Register a new member and update the database

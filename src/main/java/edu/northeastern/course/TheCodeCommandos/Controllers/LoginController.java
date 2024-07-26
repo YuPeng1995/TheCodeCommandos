@@ -26,14 +26,16 @@ public class LoginController implements Initializable {
     // Check the username and password, turn to dashboard window if credentials is correct
     public void onLogin() {
     	Stage stage = (Stage)error_label.getScene().getWindow();
-        Model.getInstance().evaluateClientCredentials(username_field.getText(), password_field.getText());
-        if (Model.getInstance().getMemberLoginSuccessFlag()) {
-            Model.getInstance().getViewFactory().closeStage(stage);
-            Model.getInstance().getViewFactory().showDashboardWindow();
-        } else {
-            username_field.setText("");
-            password_field.setText("");
-            error_label.setText("No such login credentials.");
-        }
+//        Model.getInstance().evaluateClientCredentials(username_field.getText(), password_field.getText());
+//        if (Model.getInstance().getMemberLoginSuccessFlag()) {
+//            Model.getInstance().getViewFactory().closeStage(stage);
+//            Model.getInstance().getViewFactory().showDashboardWindow();
+//        } else {
+//            username_field.setText("");
+//            password_field.setText("");
+//            error_label.setText("No such login credentials.");
+//        }
+        Model.getInstance().getViewFactory().closeStage(stage);
+        Model.getInstance().getViewFactory().showDashboardWindow();
     }
 }
