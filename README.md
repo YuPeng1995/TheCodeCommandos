@@ -68,9 +68,9 @@ This application uses SQLite for data storage. The database file is created auto
 
 The database consists of the following tables:
 
-- **members**: Stores members information (id, first_name, last_name, username, password, date_created).
-- **boards**: Stores board information (id, board_title, description, due_date).
-- **cards**: Stores task information (id, card_name, status, due_date, board).
+- **Members**: Stores members information (ID, FirstName, LastName, Username, Password, Date).
+- **Boards**: Stores board information (ID, BoardTitle, Description, Date).
+- **Cards**: Stores task information (ID, CardName, Status, Date, Board).
 
 ## Usage
 
