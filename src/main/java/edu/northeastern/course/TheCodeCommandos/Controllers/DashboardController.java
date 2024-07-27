@@ -2,12 +2,16 @@ package edu.northeastern.course.TheCodeCommandos.Controllers;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 import java.util.ResourceBundle;
 
 import edu.northeastern.course.TheCodeCommandos.Models.Board;
 import edu.northeastern.course.TheCodeCommandos.Models.Card;
+import edu.northeastern.course.TheCodeCommandos.Models.Member;
 import edu.northeastern.course.TheCodeCommandos.Models.Model;
 import javafx.beans.binding.Bindings;
+import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -47,24 +51,26 @@ public class DashboardController implements Initializable {
 
     // Change the welcome name and today info by property binding
     public void bindData() {
-        user_name.textProperty().bind(Bindings.concat("Hi, ").concat(Model.getInstance().getMember().firstNameProperty()));
+        user_name.textProperty().bind(Bindings.concat("Hi, ").concat(Model.getInstance().getMember().getFirstName()));
         login_date.setText("Today, " + LocalDate.now());
     }
 
     // Get boards from database and display them in the dashboard
     private void initBoards() {
         Model.getInstance().getBoards().clear();
-        Model.getInstance().setBoards(Model.getInstance().getBoards());
+        Model.getInstance().setBoards();
+        PriorityQueue<Board> orderedBoards = new PriorityQueue<>(Board::compareTo);
+        orderedBoards.addAll(Model.getInstance().getBoards());
 
-        for (Board b: Model.getInstance().getBoards()) {
+        for (Board b: orderedBoards) {
             VBox vBox = new VBox();
             vBox.setPadding(new Insets(30, 30, 30, 30));
             vBox.setStyle("-fx-border-color: black");
-            Label board_label = new Label(b.boardTitleProperty().getValue());
-            Text description = new Text("\nDescription: " + b.descriptionProperty().getValue() + "\n");
+            Label board_label = new Label(b.getBoardTitle());
+            Text description = new Text("\nDescription: " + b.getDescription() + "\n");
             Text dueDate = new Text("Due date: " + b.dueDateProperty().getValue().toString());
             vBox.getChildren().addAll(board_label, description, dueDate);
-            vBox.setOnMouseClicked(e -> toBoard(b.boardTitleProperty().getValue()));
+            vBox.setOnMouseClicked(e -> toBoard(b.getBoardTitle()));
             boards_container.getChildren().add(vBox);
         }
     }
@@ -73,8 +79,10 @@ public class DashboardController implements Initializable {
     private void initDoneCards() {
         Model.getInstance().getAllDoneCards().clear();
         Model.getInstance().setAllDoneCards();
-        for (Card c: Model.getInstance().getAllDoneCards()) {
-            cards_listview.getItems().add(c.cardNameProperty().getValue());
+        PriorityQueue<Card> orderedAllDoneCards = new PriorityQueue<>((a, b) -> b.compareTo(a));
+        orderedAllDoneCards.addAll(Model.getInstance().getAllDoneCards());
+        for (Card c: orderedAllDoneCards) {
+            cards_listview.getItems().add(c.getCardName());
         }
     }
 
@@ -88,7 +96,7 @@ public class DashboardController implements Initializable {
     // Close the current window and open the board window
     private void toBoard(String boardTitle) {
         Board selectedBoard = Model.getInstance().getBoards().stream()
-                .filter(b -> b.boardTitleProperty().get().equals(boardTitle))
+                .filter(b -> b.getBoardTitle().equals(boardTitle))
                 .findFirst()
                 .orElse(null);
 

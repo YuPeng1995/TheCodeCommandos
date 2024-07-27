@@ -1,20 +1,20 @@
 package edu.northeastern.course.TheCodeCommandos.Controllers;
 
+import edu.northeastern.course.TheCodeCommandos.Models.Board;
+import edu.northeastern.course.TheCodeCommandos.Models.Card;
+import edu.northeastern.course.TheCodeCommandos.Models.Model;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 public class CalendarController {
 
@@ -25,13 +25,12 @@ public class CalendarController {
     public Label monthLabel;
 
     public YearMonth currentYearMonth;
-    public Map<LocalDate, String> events;
 
     @FXML
     public void initialize() {
         currentYearMonth = YearMonth.now();
-        events = new HashMap<>();
         drawCalendar(currentYearMonth);
+
 
         // 添加延迟加载样式表，以确保Scene已经存在
         dayContainer.sceneProperty().addListener((observable, oldScene, newScene) -> {
@@ -54,6 +53,8 @@ public class CalendarController {
     }
 
     public void drawCalendar(YearMonth yearMonth) {
+        Model.getInstance().getBoards().clear();
+        Model.getInstance().getAllCards().clear();
         dayContainer.getChildren().clear();
         DateTimeFormatter monthYearFormatter = DateTimeFormatter.ofPattern("MMMM yyyy");
         monthLabel.setText(yearMonth.format(monthYearFormatter));
@@ -66,7 +67,6 @@ public class CalendarController {
         String[] daysOfWeek = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
         for (int i = 0; i < daysOfWeek.length; i++) {
             Label dayLabel = new Label(daysOfWeek[i]);
-            dayLabel.getStyleClass().add("week-day-label");
             dayContainer.add(dayLabel, i, 0);
         }
 
@@ -93,80 +93,69 @@ public class CalendarController {
         dayBox.getStyleClass().add("day-box");
 
         Label dayLabel = new Label(Integer.toString(date.getDayOfMonth()));
-        dayLabel.setOnMouseClicked(e -> handleDateClick(date));
 
         if (LocalDate.now().equals(date)) {
             dayLabel.getStyleClass().add("current-day");
         }
 
-        dayBox.getChildren().add(dayLabel);
-
         // Display event if exists
-        if (events.containsKey(date)) {
-            Label eventLabel = new Label(events.get(date));
-            eventLabel.getStyleClass().add("event-label");
-            eventLabel.setOnMouseClicked(e -> handleEventClick(date));
-            dayBox.getChildren().add(eventLabel);
+        Model.getInstance().setAllCards();
+        for (Card c: Model.getInstance().getAllCards()) {
+            if (c.dueDateProperty().getValue().equals(date)) {
+                dayLabel.getStyleClass().add("card-label");
+                dayLabel.setOnMouseClicked(e -> handleEventClick(date));
+                break;
+            }
         }
+
+        Model.getInstance().setBoards();
+        for (Board b: Model.getInstance().getBoards()) {
+            if (b.dueDateProperty().getValue().equals(date)) {
+                if (dayLabel.getStyleClass().contains("card-label")) {
+                    dayLabel.getStyleClass().add("card-board-label");
+                } else {
+                    dayLabel.getStyleClass().add("board-label");
+                }
+                dayLabel.setOnMouseClicked(e -> handleEventClick(date));
+                break;
+            }
+        }
+
+        dayBox.getChildren().add(dayLabel);
 
         return dayBox;
     }
 
-    public void handleDateClick(LocalDate date) {
-        Stage dialog = new Stage();
-        dialog.setTitle("Add Event on " + date.toString());
-
-        VBox dialogVBox = new VBox();
-        dialogVBox.setSpacing(10);
-
-        Label eventLabel = new Label("Event:");
-        TextField eventNameField = new TextField();
-
-        Button addEventButton = new Button("Add Event");
-        addEventButton.setOnAction(e -> {
-            String event = eventNameField.getText();
-            if (event != null && !event.isEmpty()) {
-                events.put(date, event);
-                drawCalendar(currentYearMonth);
-            }
-            dialog.close();
-        });
-
-        dialogVBox.getChildren().addAll(eventLabel, eventNameField, addEventButton);
-        Scene dialogScene = new Scene(dialogVBox, 300, 200);
-        dialog.setScene(dialogScene);
-        dialog.show();
-    }
-
     public void handleEventClick(LocalDate date) {
         Stage dialog = new Stage();
-        dialog.setTitle("View/Edit Event on " + date.toString());
+        dialog.setTitle("Boards/cards due on " + date.toString());
 
-        VBox dialogVBox = new VBox();
-        dialogVBox.setSpacing(10);
+        ListView<String> dialogListView = new ListView<>();
+        dialogListView.setPadding(new Insets(10, 10, 10, 10));
 
-        Label eventLabel = new Label("Event:");
-        TextField eventNameField = new TextField(events.get(date));
-
-        Button updateEventButton = new Button("Update Event");
-        updateEventButton.setOnAction(e -> {
-            String event = eventNameField.getText();
-            if (event != null && !event.isEmpty()) {
-                events.put(date, event);
-                drawCalendar(currentYearMonth);
+        Model.getInstance().getBoards().clear();
+        Model.getInstance().setBoards();
+        for (Board b: Model.getInstance().getBoards()) {
+            if (b.dueDateProperty().getValue().equals(date)) {
+                Label boardDueLabel = new Label("Board:   " + b.getBoardTitle());
+                if (!dialogListView.getItems().contains(boardDueLabel.getText())) {
+                    dialogListView.getItems().add(boardDueLabel.getText());
+                }
             }
-            dialog.close();
-        });
+        }
 
-        Button deleteEventButton = new Button("Delete Event");
-        deleteEventButton.setOnAction(e -> {
-            events.remove(date);
-            drawCalendar(currentYearMonth);
-            dialog.close();
-        });
+        Model.getInstance().getAllCards().clear();
+        Model.getInstance().setAllCards();
+        for (Card c: Model.getInstance().getAllCards()) {
+            if (c.dueDateProperty().getValue().equals(date)) {
+                Label cardDueLabel = new Label("Card:     " + c.getCardName() + " from board " + c.getBoardForCard());
+                if (!dialogListView.getItems().contains(cardDueLabel.getText())) {
+                    dialogListView.getItems().add(cardDueLabel.getText());
+                }
+            }
+        }
 
-        dialogVBox.getChildren().addAll(eventLabel, eventNameField, updateEventButton, deleteEventButton);
-        Scene dialogScene = new Scene(dialogVBox, 300, 200);
+        Scene dialogScene = new Scene(dialogListView, 300, 200);
         dialog.setScene(dialogScene);
         dialog.show();
     }

@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.PriorityQueue;
 import java.util.ResourceBundle;
 
 public class MembersController implements Initializable {
@@ -35,7 +36,9 @@ public class MembersController implements Initializable {
 	private void initMembers() {
 		Model.getInstance().getAllMembers().clear();
 		Model.getInstance().setAllMembers();
-		for (Member m: Model.getInstance().getAllMembers()) {
+		PriorityQueue<Member> orderedMembers = new PriorityQueue<>(Member::compareTo);
+		orderedMembers.addAll(Model.getInstance().getAllMembers());
+		for (Member m: orderedMembers) {
 			members_listview.getItems().add(createNewBorderPane(m));
 		}
 	}
@@ -68,8 +71,8 @@ public class MembersController implements Initializable {
 		icon.setSize("20");
 		BorderPane pane = new BorderPane();
 		HBox hBox_1 = new HBox();
-		Label firstName = new Label("   " + m.firstNameProperty().getValue());
-		Label lastName = new Label(" " + m.lastNameProperty().getValue());
+		Label firstName = new Label("   " + m.getFirstName());
+		Label lastName = new Label(" " + m.getLastName());
 		hBox_1.getChildren().addAll(icon, firstName, lastName);
 		pane.setLeft(hBox_1);
 		HBox hBox_2 = new HBox();
@@ -83,7 +86,7 @@ public class MembersController implements Initializable {
 
 	// Delete a member and update the database
 	private void deleteMember(Member m, BorderPane pane) {
-		Model.getInstance().getDatabaseDriver().deleteMember(m.usernameProperty().getValue());
+		m.delete();
 		members_listview.getItems().remove(pane);
 	}
 }

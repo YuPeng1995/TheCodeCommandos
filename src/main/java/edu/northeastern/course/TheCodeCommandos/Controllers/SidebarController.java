@@ -40,9 +40,9 @@ public class SidebarController implements Initializable {
         Model.getInstance().getBoards().clear();
         boards_choice_box.setValue("Your Boards");
         if (Model.getInstance().getBoards().isEmpty())
-            Model.getInstance().setBoards(Model.getInstance().getBoards());
+            Model.getInstance().setBoards();
         for (Board b: Model.getInstance().getBoards()) {
-            boards_choice_box.getItems().add(b.boardTitleProperty().getValue());
+            boards_choice_box.getItems().add(b.getBoardTitle());
         }
     }
     
@@ -73,7 +73,7 @@ public class SidebarController implements Initializable {
     // Close the current window and open the board window
     private void toBoard(String boardTitle) {
         Board selectedBoard = Model.getInstance().getBoards().stream()
-                .filter(b -> b.boardTitleProperty().get().equals(boardTitle))
+                .filter(b -> b.getBoardTitle().equals(boardTitle))
                 .findFirst()
                 .orElse(null);
 

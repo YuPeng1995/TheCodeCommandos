@@ -82,6 +82,31 @@ public class DatabaseDriver {
         }
     }
 
+    public ResultSet getAllCards() {
+        Statement statement;
+        ResultSet resultSet = null;
+        try {
+            statement = this.conn.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM Cards");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return resultSet;
+    }
+
+    // Get cards with Done status from database
+    public ResultSet getDoneCards() {
+        Statement statement;
+        ResultSet resultSet = null;
+        try {
+            statement = this.conn.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM Cards WHERE Status='Done'");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return resultSet;
+    }
+
     // Create a new board in the database
     public void createNewBoard(String projectName, String description, LocalDate date) {
         Statement statement;
@@ -100,38 +125,28 @@ public class DatabaseDriver {
         }
     }
 
-    // Get cards with Done status from database
-    public ResultSet getDoneCards() {
+    public void deleteBoard(String boardName) {
+        Statement statement;
+        try {
+            statement = this.conn.createStatement();
+            statement.executeUpdate("DELETE FROM Boards WHERE BoardTitle='"+boardName+"'");
+            statement.executeUpdate("DELETE FROM Cards WHERE Board='"+boardName+"'");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Get cards for the board
+    public ResultSet getCardsForBoard(String boardTitle) {
         Statement statement;
         ResultSet resultSet = null;
         try {
             statement = this.conn.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM Cards WHERE Status='Done'");
+            resultSet = statement.executeQuery("SELECT * FROM Cards WHERE Board = '" + boardTitle + "'");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return resultSet;
-    }
-
-
-    // Get cards for the board
-    public List<Card> getCardsForBoard(String boardTitle) {
-        List<Card> cards = new ArrayList<>();
-        try {
-            String query = "SELECT * FROM Cards WHERE Board = '" + boardTitle + "'";
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                String cardName = resultSet.getString("CardName");
-                String status = resultSet.getString("Status");
-                String[] dateParts = resultSet.getString("Date").split("-");
-                LocalDate date = LocalDate.of(Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]), Integer.parseInt(dateParts[2]));
-                cards.add(new Card(cardName, status, date, boardTitle));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return cards;
     }
 
     // Add cards in the database
@@ -141,6 +156,16 @@ public class DatabaseDriver {
             statement = this.conn.createStatement();
             statement.executeUpdate("INSERT INTO Cards (CardName, Status, Date, Board) VALUES ('"
                     + cardName + "', '" + status + "', '" + date + "', '" + boardTitle + "')");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteCard(String cardName, String boardName) {
+        Statement statement;
+        try {
+            statement = this.conn.createStatement();
+            statement.executeUpdate("DELETE FROM Cards WHERE CardName='"+cardName+"' AND Board='"+boardName+"'");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -158,24 +183,4 @@ public class DatabaseDriver {
         }
     }
 
-    public void deleteBoard(String boardName) {
-        Statement statement;
-        try {
-            statement = this.conn.createStatement();
-            statement.executeUpdate("DELETE FROM Boards WHERE BoardTitle='"+boardName+"'");
-            statement.executeUpdate("DELETE FROM Cards WHERE Board='"+boardName+"'");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void deleteCard(String cardName, String boardName) {
-        Statement statement;
-        try {
-            statement = this.conn.createStatement();
-            statement.executeUpdate("DELETE FROM Cards WHERE CardName='"+cardName+"' AND Board='"+boardName+"'");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }

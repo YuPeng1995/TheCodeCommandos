@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
 import java.net.URL;
+import java.util.PriorityQueue;
 import java.util.ResourceBundle;
 
 public class TableController implements Initializable {
@@ -25,37 +26,46 @@ public class TableController implements Initializable {
 
     private void setupChoiceBox() {
         Model.getInstance().getBoards().clear();
-        Model.getInstance().setBoards(Model.getInstance().getBoards());
+        Model.getInstance().setBoards();
         for (Board b: Model.getInstance().getBoards()) {
-            Label project = new Label(b.boardTitleProperty().getValue());
+            Label project = new Label(b.getBoardTitle());
             project_choicebox.getItems().add(project.getText());
         }
         project_choicebox.valueProperty().addListener((observable, oldValue, newValue) -> setupGridPane(newValue));
     }
 
     private void setupGridPaneTitle() {
-        cards_gridpane.add(new Label("Card"), 0, 0);
-        cards_gridpane.add(new Label("Status"), 1, 0);
-        cards_gridpane.add(new Label("Due date"), 2, 0);
-        cards_gridpane.add(new Label("Action"), 3, 0);
+        Label card = new Label("Cards");
+        card.setStyle("-fx-font-size: 18");
+        Label status = new Label("Status");
+        status.setStyle("-fx-font-size: 18");
+        Label dueDate = new Label("Due Date");
+        dueDate.setStyle("-fx-font-size: 18");
+        Label action = new Label("Action");
+        action.setStyle("-fx-font-size: 18");
+        cards_gridpane.addRow(0, card, status, dueDate, action);
     }
 
     private void setupGridPane(String boardTitle) {
         cards_gridpane.getChildren().clear();
         setupGridPaneTitle();
-        Model.getInstance().getBoardCards(boardTitle).clear();
-        Model.getInstance().setCardsForBoard(Model.getInstance().getBoardCards(boardTitle));
-        for (int i = 1; i <= Model.getInstance().getBoardCards(boardTitle).size(); i++) {
-            Card c = Model.getInstance().getBoardCards(boardTitle).get(i - 1);
-            cards_gridpane.add(new Label(c.cardNameProperty().getValue()), 0, i);
-            cards_gridpane.add(new Label(c.statusProperty().getValue()), 1, i);
+        Model.getInstance().getBoardCards().clear();
+        Model.getInstance().setCardsForBoard(boardTitle);
+        PriorityQueue<Card> orderedCards = new PriorityQueue<>(Card::compareTo);
+        orderedCards.addAll(Model.getInstance().getBoardCards());
+
+        int i = 1;
+        for (Card c: orderedCards) {
+            cards_gridpane.add(new Label(c.getCardName()), 0, i);
+            cards_gridpane.add(new Label(c.getStatus()), 1, i);
             cards_gridpane.add(new Label(c.dueDateProperty().getValue().toString()), 2, i);
             Button delete = new Button("Delete");
             delete.setOnAction(e -> {
-                Model.getInstance().getDatabaseDriver().deleteCard(c.cardNameProperty().get(), boardTitle);
+                new Card(c.getCardName(), c.getStatus(), c.dueDateProperty().getValue(), boardTitle).delete();
                 setupGridPane(boardTitle);
             });
             cards_gridpane.add(delete, 3, i);
+            i++;
         }
     }
 }

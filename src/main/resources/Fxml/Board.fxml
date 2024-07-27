@@ -79,6 +79,16 @@
                <Font size="18.0" />
             </font>
          </Label>
+         <Label fx:id="card_error_lbl" layoutX="20.0" layoutY="615.0" textFill="RED">
+            <font>
+               <Font size="18.0" />
+            </font>
+         </Label>
+         <Label fx:id="due_date" layoutX="590.0" layoutY="30.0" text="Label">
+            <font>
+               <Font size="14.0" />
+            </font>
+         </Label>
       </AnchorPane>
    </center>
 </BorderPane>

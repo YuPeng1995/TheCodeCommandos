@@ -2,8 +2,10 @@ package edu.northeastern.course.TheCodeCommandos.Controllers;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.ResourceBundle;
 
+import edu.northeastern.course.TheCodeCommandos.Models.Board;
 import edu.northeastern.course.TheCodeCommandos.Models.Card;
 import edu.northeastern.course.TheCodeCommandos.Models.DatabaseDriver;
 import edu.northeastern.course.TheCodeCommandos.Models.Model;
@@ -22,6 +24,7 @@ public class NewBoardController implements Initializable {
     public ListView<String> to_do_cards_listview;
     public DatabaseDriver databaseDriver;
     public ObservableList<Card> to_do_cards_list = FXCollections.observableArrayList();
+    public HashSet<String> card_names_hashSet = new HashSet<>();
     public Label error_lbl;
 
     // Everytime a window is loaded, the initialize() method is called
@@ -32,8 +35,15 @@ public class NewBoardController implements Initializable {
         new_card_btn.setOnAction(e -> Model.getInstance().getViewFactory().addCard().ifPresent(pair -> {
             String cardName = pair.getKey();
             LocalDate dueDate = pair.getValue();
-            to_do_cards_listview.getItems().add(cardName);
-            to_do_cards_list.add(new Card(cardName, "To-do", dueDate, board_title_textfield.getText()));
+            if (card_names_hashSet.contains(cardName)) {
+                error_lbl.setStyle("-fx-text-fill: red");
+                error_lbl.setText("Card name already exists.\nPlease choose a different card name.");
+            } else {
+                error_lbl.setText("");
+                card_names_hashSet.add(cardName);
+                to_do_cards_listview.getItems().add(cardName);
+                to_do_cards_list.add(new Card(cardName, "To-do", dueDate, board_title_textfield.getText()));
+            }
         }));
     }
 
@@ -45,22 +55,24 @@ public class NewBoardController implements Initializable {
 
         if (projectName.isEmpty() || description.isEmpty() || dueDate == null) {
             // Handle empty fields or invalid input
-            System.out.println("Please fill all fields.");
+            error_lbl.setStyle("-fx-text-fill: red");
+            error_lbl.setText("Please fill all fields.");
             return;
         }
 
-        Model.getInstance().getDatabaseDriver().createNewBoard(projectName, description, dueDate);
+        if (Model.getInstance().getBoardTitleHashSet().contains(projectName)) {
+            error_lbl.setStyle("-fx-text-fill: red");
+            error_lbl.setText("This project already exists.\n Please change a project name.");
+            return;
+        }
+        new Board(projectName, description, dueDate).add();
         for (Card c : to_do_cards_list) {
-            Model.getInstance().getDatabaseDriver().addCard(
-                    c.cardNameProperty().get(),
-                    c.statusProperty().get(),
-                    c.dueDateProperty().get(),
-                    c.boardProperty().get()
-            );
+            c.setBoardForCard(projectName);
+            c.add();
         }
         emptyFields();
+        error_lbl.setStyle("-fx-text-fill: blue");
         error_lbl.setText("Successfully submitted!");
-
     }
 
     // Empty all text fields
@@ -69,6 +81,8 @@ public class NewBoardController implements Initializable {
         description_textarea.setText("");
         date.setValue(null);
         to_do_cards_listview.getItems().clear();
+        to_do_cards_list.clear();
+        card_names_hashSet.clear();
     }
 
 }

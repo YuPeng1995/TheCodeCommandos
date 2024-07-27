@@ -7,28 +7,45 @@ import javafx.beans.property.StringProperty;
 
 import java.time.LocalDate;
 
-public class Card {
+public class Card implements Comparable<Card> {
     // Data field for Board
-    private final StringProperty cardName;
-    private final StringProperty status;
+    private final String cardName;
+    private final String status;
     private final ObjectProperty<LocalDate> dueDate;
-    private final StringProperty board;
+    private String board;
 
     // Constructor
     public Card(String cardName, String status, LocalDate dueDate, String board) {
-        this.cardName = new SimpleStringProperty(this, "Default_card_name", cardName);
-        this.status = new SimpleStringProperty(this, "To-do", status);
-        this.dueDate = new SimpleObjectProperty<>(this, "Date", dueDate);
-        this.board = new SimpleStringProperty(this, "Default_board", board);
+        this.cardName = cardName;
+        this.status = status;
+        this.dueDate = new SimpleObjectProperty<>(dueDate);
+        this.board = board;
     }
 
     // Four getter methods
-    public StringProperty cardNameProperty() {return cardName;}
+    public String getCardName() {return cardName;}
 
-    public StringProperty statusProperty() {return status;}
+    public String getStatus() {return status;}
 
     public ObjectProperty<LocalDate> dueDateProperty() {return dueDate;}
 
-    public StringProperty boardProperty() {return board;}
+    public String getBoardForCard() {return board;}
+
+    public void setBoardForCard(String boardTitle) {
+        this.board = boardTitle;
+    }
+
+    public void add() {
+        Model.getInstance().getDatabaseDriver().addCard(cardName, status, dueDate.get(), board);
+    }
+
+    public void delete() {
+        Model.getInstance().getDatabaseDriver().deleteCard(cardName, board);
+    }
+
+    @Override
+    public int compareTo(Card card) {
+        return this.dueDate.get().compareTo(card.dueDateProperty().get());
+    }
 
 }

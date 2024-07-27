@@ -6,8 +6,7 @@ import javafx.collections.ObservableList;
 
 import java.sql.ResultSet;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 
 public class Model {
 
@@ -15,10 +14,11 @@ public class Model {
 	private final ViewFactory viewFactory;
 	private final DatabaseDriver databaseDriver;
 
-	private final Member member;
+	private Member member;
 	private boolean memberLoginSuccessFlag;
 	private final ObservableList<Board> boards;
-	private List<Card> boardCards;
+	private final ObservableList<Card> boardCards;
+	private final ObservableList<Card> allCards;
 	private final ObservableList<Card> allDoneCards;
 	private final ObservableList<Member> allMembers;
 
@@ -32,7 +32,8 @@ public class Model {
 		this.memberLoginSuccessFlag = false;
 		this.member = new Member("", "", "",  null);
 		this.boards = FXCollections.observableArrayList();
-		this.boardCards = new ArrayList<>();
+		this.boardCards = FXCollections.observableArrayList();
+		this.allCards = FXCollections.observableArrayList();
 		this.allDoneCards = FXCollections.observableArrayList();
 		this.allMembers = FXCollections.observableArrayList();
 		this.currentBoard = new Board("", "", null);
@@ -96,12 +97,12 @@ public class Model {
 		ResultSet resultSet = databaseDriver.getMemberData(username, password);
 		try {
 			if (resultSet.isBeforeFirst()) {
-				this.member.firstNameProperty().set(resultSet.getString("FirstName"));
-				this.member.lastNameProperty().set(resultSet.getString("LastName"));
-				this.member.usernameProperty().set(resultSet.getString("Username"));
+				String fName = resultSet.getString("FirstName");
+				String lName = resultSet.getString("LastName");
+				String userName = resultSet.getString("Username");
 				String[] dateParts = resultSet.getString("Date").split("-");
 				LocalDate date = LocalDate.of(Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]), Integer.parseInt(dateParts[2]));
-				this.member.dateProperty().set(date);
+                this.member = new Member(fName, lName, userName, date);
 				this.memberLoginSuccessFlag = true;
 			}
 		} catch (Exception e) {
@@ -110,7 +111,7 @@ public class Model {
 	}
 
 	// Set boards data field through database ResultSet
-	public void setBoards(ObservableList<Board> boards) {
+	public void setBoards() {
 		ResultSet resultSet = databaseDriver.getBoardsData();
 		try {
 			while (resultSet.next()){
@@ -130,13 +131,24 @@ public class Model {
 		return boards;
 	}
 
-	public void setCardsForBoard(List<Card> cards) {
-		this.boardCards = cards;
+	public void setCardsForBoard(String boardTitle) {
+		ResultSet resultSet = databaseDriver.getCardsForBoard(boardTitle);
+		try {
+			while (resultSet.next()){
+				String cardName = resultSet.getString("CardName");
+				String status = resultSet.getString("Status");
+				String[] dateParts = resultSet.getString("Date").split("-");
+				LocalDate date = LocalDate.of(Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]), Integer.parseInt(dateParts[2]));
+				boardCards.add(new Card(cardName, status, date, boardTitle));
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	// Get cards for the specified board
-	public List<Card> getBoardCards(String board) {
-		return databaseDriver.getCardsForBoard(board);
+	public ObservableList<Card> getBoardCards() {
+		return boardCards;
 	}
 
 	// Get current board
@@ -149,6 +161,26 @@ public class Model {
 		this.currentBoard = currentBoard;
 	}
 
+	public void setAllCards() {
+		ResultSet resultSet = databaseDriver.getAllCards();
+		try {
+			while (resultSet.next()){
+				String cardName = resultSet.getString("CardName");
+				String status = resultSet.getString("Status");
+				String[] dateParts = resultSet.getString("Date").split("-");
+				LocalDate date = LocalDate.of(Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]), Integer.parseInt(dateParts[2]));
+				String board = resultSet.getString("Board");
+				allCards.add(new Card(cardName, status, date, board));
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public ObservableList<Card> getAllCards() {
+		return allCards;
+	}
+
 	// Set cards with Done status through database ResultSet
 	public void setAllDoneCards() {
 		ResultSet resultSet = databaseDriver.getDoneCards();
@@ -158,7 +190,8 @@ public class Model {
 				String status = resultSet.getString("Status");
 				String[] dateParts = resultSet.getString("Date").split("-");
 				LocalDate date = LocalDate.of(Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]), Integer.parseInt(dateParts[2]));
-				allDoneCards.add(new Card(cardName, status, date, resultSet.getString("Board")));
+				String board = resultSet.getString("Board");
+				allDoneCards.add(new Card(cardName, status, date, board));
 			}
 		}catch (Exception e){
 			e.printStackTrace();
@@ -170,4 +203,19 @@ public class Model {
 		return allDoneCards;
 	}
 
+	public HashSet<String> getBoardTitleHashSet() {
+		HashSet<String> boardTitleHashSet = new HashSet<>();
+		for (Board board : boards) {
+            boardTitleHashSet.add(board.getBoardTitle());
+		}
+		return boardTitleHashSet;
+	}
+
+	public HashSet<String> getCardNameHashSet() {
+		HashSet<String> cardNameHashSet = new HashSet<>();
+		for (Card c: getBoardCards()) {
+			cardNameHashSet.add(c.getCardName());
+		}
+		return cardNameHashSet;
+	}
 }

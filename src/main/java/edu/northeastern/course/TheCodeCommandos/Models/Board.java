@@ -4,24 +4,41 @@ import javafx.beans.property.*;
 
 import java.time.LocalDate;
 
-public class Board {
+public class Board implements Comparable<Board> {
     // Data field for Board
-    private final StringProperty boardTitle;
-    private final StringProperty description;
+    private String boardTitle;
+    private final String description;
     private final ObjectProperty<LocalDate> dueDate;
 
     // Constructor
     public Board(String boardTitle, String description, LocalDate dueDate) {
-        this.boardTitle = new SimpleStringProperty(this, "Default_title", boardTitle);
-        this.description = new SimpleStringProperty(this, "Description", description);
-        this.dueDate = new SimpleObjectProperty<>(this, "Date", dueDate);
+        this.boardTitle = boardTitle;
+        this.description = description;
+        this.dueDate = new SimpleObjectProperty<>(dueDate);
     }
 
     // Four getter methods
-    public StringProperty boardTitleProperty() {return boardTitle;}
+    public String getBoardTitle() {return boardTitle;}
 
-    public StringProperty descriptionProperty() {return description;}
+    public void setBoardTitle(String boardTitle) {
+        this.boardTitle = boardTitle;
+    }
+
+    public String getDescription() {return description;}
 
     public ObjectProperty<LocalDate> dueDateProperty() {return dueDate;}
+
+    public void add() {
+        Model.getInstance().getDatabaseDriver().createNewBoard(boardTitle, description, dueDate.get());
+    }
+
+    public void delete() {
+        Model.getInstance().getDatabaseDriver().deleteBoard(boardTitle);
+    }
+
+    @Override
+    public int compareTo(Board b) {
+        return this.dueDate.get().compareTo(b.dueDateProperty().get());
+    }
 
 }
