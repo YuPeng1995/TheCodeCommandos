@@ -10,12 +10,10 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="edu.northeastern.course.TheCodeCommandos.Controllers.CalendarController">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.northeastern.course.TheCodeCommandos.Controllers.CalendarController">
     <left>
-        <fx:include source="Sidebar.fxml"/>
+        <fx:include source="Sidebar.fxml" />
     </left>
     <center>
         <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="850.0">
@@ -24,43 +22,40 @@
                     <VBox prefHeight="150.0" prefWidth="250.0" BorderPane.alignment="CENTER">
                         <Label text="RED: Today" textFill="RED">
                             <VBox.margin>
-                                <Insets bottom="10.0" left="20.0" top="15.0"/>
+                                <Insets bottom="10.0" left="20.0" top="15.0" />
                             </VBox.margin>
                         </Label>
-                        <Label text="BLUE:  You have cards due today" textFill="BLUE">
+                        <Label text="BLUE:  You have cards due" textFill="BLUE">
                             <VBox.margin>
-                                <Insets bottom="10.0" left="20.0" top="10.0"/>
+                                <Insets bottom="10.0" left="20.0" top="10.0" />
                             </VBox.margin>
                         </Label>
-                        <Label text="GREEN: You have boards due today" textFill="GREEN">
+                        <Label text="GREEN: You have boards due" textFill="GREEN">
                             <VBox.margin>
-                                <Insets bottom="10.0" left="20.0" top="10.0"/>
+                                <Insets bottom="10.0" left="20.0" top="10.0" />
                             </VBox.margin>
                         </Label>
-                        <Label text="BLACK: You have both due today" textFill="BLACK">
+                        <Label text="BLACK: You have both due" textFill="BLACK">
                             <VBox.margin>
-                                <Insets left="20.0" top="10.0"/>
+                                <Insets left="20.0" top="10.0" />
                             </VBox.margin>
                         </Label>
                         <HBox.margin>
-                            <Insets/>
+                            <Insets />
                         </HBox.margin>
                     </VBox>
-                    <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                          minWidth="-Infinity" prefHeight="150.0" prefWidth="600.0" spacing="10"
-                          BorderPane.alignment="CENTER">
-                        <Button onAction="#handlePreviousMonth" text="Previous Month"/>
+                    <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="600.0" spacing="10" BorderPane.alignment="CENTER">
+                        <Button onAction="#handlePreviousMonth" text="Previous Month" />
                         <Label fx:id="monthLabel" minHeight="-Infinity" minWidth="-Infinity">
                             <font>
-                                <Font name="System Bold" size="24.0"/>
+                                <Font name="System Bold" size="24.0" />
                             </font>
                         </Label>
-                        <Button onAction="#handleNextMonth" text="Next Month"/>
+                        <Button onAction="#handleNextMonth" text="Next Month" />
                     </HBox>
                 </HBox>
                 <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity">
-                    <GridPane fx:id="dayContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                              minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" styleClass="day-container"/>
+                    <GridPane fx:id="dayContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" styleClass="day-container" />
                 </ScrollPane>
             </VBox>
         </AnchorPane>
