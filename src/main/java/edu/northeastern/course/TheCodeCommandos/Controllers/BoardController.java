@@ -91,12 +91,7 @@ public class BoardController implements Initializable {
             Model.getInstance().getViewFactory().addCard().ifPresent(pair -> {
                 String cardName = pair.getKey();
                 LocalDate dueDate = pair.getValue();
-                if (Model.getInstance().getCardNameHashSet().contains(cardName)) {
-                    card_error_lbl.setText("Card already exists");
-                } else {
-                    card_error_lbl.setText("");
-                    new Card(cardName, "To-do", dueDate, Model.getInstance().getCurrentBoard().getBoardTitle()).add();
-                }
+                createNewCard(cardName, dueDate, "To-do");
             });
             populateLists();
         });
@@ -104,12 +99,7 @@ public class BoardController implements Initializable {
             Model.getInstance().getViewFactory().addCard().ifPresent(pair -> {
                 String cardName = pair.getKey();
                 LocalDate dueDate = pair.getValue();
-                if (Model.getInstance().getCardNameHashSet().contains(cardName)) {
-                    card_error_lbl.setText("Card already exists");
-                } else {
-                    card_error_lbl.setText("");
-                    new Card(cardName, "Doing", dueDate, Model.getInstance().getCurrentBoard().getBoardTitle()).add();
-                }
+                createNewCard(cardName, dueDate, "Doing");
             });
             populateLists();
         });
@@ -117,15 +107,23 @@ public class BoardController implements Initializable {
             Model.getInstance().getViewFactory().addCard().ifPresent(pair -> {
                 String cardName = pair.getKey();
                 LocalDate dueDate = pair.getValue();
-                if (Model.getInstance().getCardNameHashSet().contains(cardName)) {
-                    card_error_lbl.setText("Card already exists");
-                } else {
-                    card_error_lbl.setText("");
-                    new Card(cardName, "Done", dueDate, Model.getInstance().getCurrentBoard().getBoardTitle()).add();
-                }
+                createNewCard(cardName, dueDate, "Done");
             });
             populateLists();
         });
+    }
+
+    private void createNewCard(String cardName, LocalDate dueDate, String status) {
+        if (cardName.isEmpty() || dueDate == null) {
+            card_error_lbl.setText("Please fill out all the input field.");
+        } else if (Model.getInstance().getCardNameHashSet().contains(cardName)) {
+            card_error_lbl.setText("Card name already exists. Please choose a different card name.");
+        } else if (dueDate.isAfter(Model.getInstance().getCurrentBoard().dueDateProperty().getValue())) {
+            card_error_lbl.setText("The time you choose is after project due date.\nPlease choose a different time.");
+        } else {
+            card_error_lbl.setText("");
+            new Card(cardName, status, dueDate, Model.getInstance().getCurrentBoard().getBoardTitle()).add();
+        }
     }
 
     private void setDeleteBoard() {

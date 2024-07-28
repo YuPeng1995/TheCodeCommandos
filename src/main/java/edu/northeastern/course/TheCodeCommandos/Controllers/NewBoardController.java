@@ -35,9 +35,15 @@ public class NewBoardController implements Initializable {
         new_card_btn.setOnAction(e -> Model.getInstance().getViewFactory().addCard().ifPresent(pair -> {
             String cardName = pair.getKey();
             LocalDate dueDate = pair.getValue();
-            if (card_names_hashSet.contains(cardName)) {
-                error_lbl.setStyle("-fx-text-fill: red");
+            error_lbl.setStyle("-fx-text-fill: red");
+            if (cardName.isEmpty() || dueDate == null) {
+                error_lbl.setText("Please fill out all the input field.");
+            } else if (card_names_hashSet.contains(cardName)) {
                 error_lbl.setText("Card name already exists.\nPlease choose a different card name.");
+            } else if (date.getValue() == null) {
+                error_lbl.setText("Please fill out project due date first.");
+            } else if (dueDate.isAfter(date.getValue())) {
+                error_lbl.setText("The time you choose is after project \ndue date.\nPlease choose a different time.");
             } else {
                 error_lbl.setText("");
                 card_names_hashSet.add(cardName);
