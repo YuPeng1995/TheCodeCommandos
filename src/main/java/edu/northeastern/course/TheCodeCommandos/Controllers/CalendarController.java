@@ -67,6 +67,7 @@ public class CalendarController {
         String[] daysOfWeek = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
         for (int i = 0; i < daysOfWeek.length; i++) {
             Label dayLabel = new Label(daysOfWeek[i]);
+            dayLabel.setStyle("-fx-font-size: 15; -fx-font-weight: bold");
             dayContainer.add(dayLabel, i, 0);
         }
 

@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 public class BoardController implements Initializable {
@@ -17,7 +18,7 @@ public class BoardController implements Initializable {
     public Label board_title_lbl;
     public ListView<BorderPane> to_do_listview;
     public ListView<BorderPane> doing_listview;
-    public ListView<Text> done_listview;
+    public ListView<BorderPane> done_listview;
     public Text add_to_do_text;
     public Text add_doing_text;
     public Text add_done_text;
@@ -33,56 +34,9 @@ public class BoardController implements Initializable {
         String boardTitle = Model.getInstance().getCurrentBoard().getBoardTitle();
         board_title_lbl.setText(boardTitle);
         due_date.setText("Due :" + Model.getInstance().getCurrentBoard().dueDateProperty().get().toString());
+        setAddCard();
+        setDeleteBoard();
         populateLists();
-
-        add_to_do_text.setOnMouseClicked(e -> {
-            Model.getInstance().getViewFactory().addCard().ifPresent(pair -> {
-                String cardName = pair.getKey();
-                LocalDate dueDate = pair.getValue();
-                if (Model.getInstance().getCardNameHashSet().contains(cardName)) {
-                    card_error_lbl.setText("Card already exists");
-                } else {
-                    card_error_lbl.setText("");
-                    new Card(cardName, "To-do", dueDate, boardTitle).add();
-                }
-            });
-            populateLists();
-        });
-        add_doing_text.setOnMouseClicked(e -> {
-            Model.getInstance().getViewFactory().addCard().ifPresent(pair -> {
-                String cardName = pair.getKey();
-                LocalDate dueDate = pair.getValue();
-                if (Model.getInstance().getCardNameHashSet().contains(cardName)) {
-                    card_error_lbl.setText("Card already exists");
-                } else {
-                    card_error_lbl.setText("");
-                    new Card(cardName, "Doing", dueDate, boardTitle).add();
-                }
-            });
-            populateLists();
-        });
-        add_done_text.setOnMouseClicked(e -> {
-            Model.getInstance().getViewFactory().addCard().ifPresent(pair -> {
-                String cardName = pair.getKey();
-                LocalDate dueDate = pair.getValue();
-                if (Model.getInstance().getCardNameHashSet().contains(cardName)) {
-                    card_error_lbl.setText("Card already exists");
-                } else {
-                    card_error_lbl.setText("");
-                    new Card(cardName, "Done", dueDate, boardTitle).add();
-                }
-            });
-            populateLists();
-        });
-
-        delete_project_btn.setOnAction(e -> {
-            Model.getInstance().getCurrentBoard().delete();
-            board_title_lbl.setText("Project Name");
-            to_do_listview.getItems().clear();
-            doing_listview.getItems().clear();
-            done_listview.getItems().clear();
-            error_lbl.setText("Successfully deleted project");
-        });
 
     }
 
@@ -98,27 +52,91 @@ public class BoardController implements Initializable {
         for (Card card : cards) {
             BorderPane pane = new BorderPane();
             Text cardDisplay = new Text(card.getCardName());
-            Button button = new Button();
-            button.setStyle("-fx-font-size:10");
+            Button move = new Button();
+            move.setStyle("-fx-font-size:10");
+            Button delete = new Button("Delete");
+            delete.setStyle("-fx-font-size:10");
+            delete.setOnAction(e -> {
+                card.delete();
+                populateLists();
+            });
+            HBox hBox = new HBox();
+            hBox.getChildren().addAll(delete, move);
+            hBox.setSpacing(5);
             pane.setLeft(cardDisplay);
-            pane.setRight(button);
 
             switch (card.getStatus()) {
                 case "To-do":
-                    button.setText("Move to Doing");
-                    button.setOnAction(e -> moveCardToNextStatus(card.getCardName(), "Doing"));
+                    pane.setRight(hBox);
+                    move.setText("Move to Doing");
+                    move.setOnAction(e -> moveCardToNextStatus(card.getCardName(), "Doing"));
                     to_do_listview.getItems().add(pane);
                     break;
                 case "Doing":
-                    button.setText("Move to Done");
-                    button.setOnAction(e -> moveCardToNextStatus(card.getCardName(), "Done"));
+                    pane.setRight(hBox);
+                    move.setText("Move to Done");
+                    move.setOnAction(e -> moveCardToNextStatus(card.getCardName(), "Done"));
                     doing_listview.getItems().add(pane);
                     break;
                 case "Done":
-                    done_listview.getItems().add(cardDisplay);
+                    pane.setRight(delete);
+                    done_listview.getItems().add(pane);
                     break;
             }
         }
+    }
+
+    private void setAddCard() {
+        add_to_do_text.setOnMouseClicked(e -> {
+            Model.getInstance().getViewFactory().addCard().ifPresent(pair -> {
+                String cardName = pair.getKey();
+                LocalDate dueDate = pair.getValue();
+                if (Model.getInstance().getCardNameHashSet().contains(cardName)) {
+                    card_error_lbl.setText("Card already exists");
+                } else {
+                    card_error_lbl.setText("");
+                    new Card(cardName, "To-do", dueDate, Model.getInstance().getCurrentBoard().getBoardTitle()).add();
+                }
+            });
+            populateLists();
+        });
+        add_doing_text.setOnMouseClicked(e -> {
+            Model.getInstance().getViewFactory().addCard().ifPresent(pair -> {
+                String cardName = pair.getKey();
+                LocalDate dueDate = pair.getValue();
+                if (Model.getInstance().getCardNameHashSet().contains(cardName)) {
+                    card_error_lbl.setText("Card already exists");
+                } else {
+                    card_error_lbl.setText("");
+                    new Card(cardName, "Doing", dueDate, Model.getInstance().getCurrentBoard().getBoardTitle()).add();
+                }
+            });
+            populateLists();
+        });
+        add_done_text.setOnMouseClicked(e -> {
+            Model.getInstance().getViewFactory().addCard().ifPresent(pair -> {
+                String cardName = pair.getKey();
+                LocalDate dueDate = pair.getValue();
+                if (Model.getInstance().getCardNameHashSet().contains(cardName)) {
+                    card_error_lbl.setText("Card already exists");
+                } else {
+                    card_error_lbl.setText("");
+                    new Card(cardName, "Done", dueDate, Model.getInstance().getCurrentBoard().getBoardTitle()).add();
+                }
+            });
+            populateLists();
+        });
+    }
+
+    private void setDeleteBoard() {
+        delete_project_btn.setOnAction(e -> {
+            Model.getInstance().getCurrentBoard().delete();
+            board_title_lbl.setText("Project Name");
+            to_do_listview.getItems().clear();
+            doing_listview.getItems().clear();
+            done_listview.getItems().clear();
+            error_lbl.setText("Successfully deleted project");
+        });
     }
 
     // Move the card to next status

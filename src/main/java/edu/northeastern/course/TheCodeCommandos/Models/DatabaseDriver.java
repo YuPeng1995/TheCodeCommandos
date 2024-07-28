@@ -2,8 +2,6 @@ package edu.northeastern.course.TheCodeCommandos.Models;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DatabaseDriver {
 
@@ -88,19 +86,6 @@ public class DatabaseDriver {
         try {
             statement = this.conn.createStatement();
             resultSet = statement.executeQuery("SELECT * FROM Cards");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return resultSet;
-    }
-
-    // Get cards with Done status from database
-    public ResultSet getDoneCards() {
-        Statement statement;
-        ResultSet resultSet = null;
-        try {
-            statement = this.conn.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM Cards WHERE Status='Done'");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

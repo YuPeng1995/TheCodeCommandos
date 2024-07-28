@@ -19,7 +19,6 @@ public class Model {
 	private final ObservableList<Board> boards;
 	private final ObservableList<Card> boardCards;
 	private final ObservableList<Card> allCards;
-	private final ObservableList<Card> allDoneCards;
 	private final ObservableList<Member> allMembers;
 
 	private Board currentBoard;
@@ -34,7 +33,6 @@ public class Model {
 		this.boards = FXCollections.observableArrayList();
 		this.boardCards = FXCollections.observableArrayList();
 		this.allCards = FXCollections.observableArrayList();
-		this.allDoneCards = FXCollections.observableArrayList();
 		this.allMembers = FXCollections.observableArrayList();
 		this.currentBoard = new Board("", "", null);
 	}
@@ -181,28 +179,6 @@ public class Model {
 		return allCards;
 	}
 
-	// Set cards with Done status through database ResultSet
-	public void setAllDoneCards() {
-		ResultSet resultSet = databaseDriver.getDoneCards();
-		try {
-			while (resultSet.next()){
-				String cardName = resultSet.getString("CardName");
-				String status = resultSet.getString("Status");
-				String[] dateParts = resultSet.getString("Date").split("-");
-				LocalDate date = LocalDate.of(Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]), Integer.parseInt(dateParts[2]));
-				String board = resultSet.getString("Board");
-				allDoneCards.add(new Card(cardName, status, date, board));
-			}
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-	}
-
-	// Get cards with Done status
-	public ObservableList<Card> getAllDoneCards() {
-		return allDoneCards;
-	}
-
 	public HashSet<String> getBoardTitleHashSet() {
 		HashSet<String> boardTitleHashSet = new HashSet<>();
 		for (Board board : boards) {
@@ -217,5 +193,13 @@ public class Model {
 			cardNameHashSet.add(c.getCardName());
 		}
 		return cardNameHashSet;
+	}
+
+	public HashSet<String> getMemberUsernameHashSet() {
+		HashSet<String> memberUserHashSet = new HashSet<>();
+		for (Member m: getAllMembers()) {
+			memberUserHashSet.add(m.getUsername());
+		}
+		return memberUserHashSet;
 	}
 }

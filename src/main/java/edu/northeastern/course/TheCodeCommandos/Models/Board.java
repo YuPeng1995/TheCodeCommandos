@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public class Board implements Comparable<Board> {
     // Data field for Board
-    private String boardTitle;
+    private final String boardTitle;
     private final String description;
     private final ObjectProperty<LocalDate> dueDate;
 
@@ -19,10 +19,6 @@ public class Board implements Comparable<Board> {
 
     // Four getter methods
     public String getBoardTitle() {return boardTitle;}
-
-    public void setBoardTitle(String boardTitle) {
-        this.boardTitle = boardTitle;
-    }
 
     public String getDescription() {return description;}
 

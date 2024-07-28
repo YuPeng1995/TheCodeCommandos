@@ -34,12 +34,17 @@ public class MembersController implements Initializable {
 
 	// Create members in the listview
 	private void initMembers() {
+		members_listview.getItems().clear();
 		Model.getInstance().getAllMembers().clear();
 		Model.getInstance().setAllMembers();
 		PriorityQueue<Member> orderedMembers = new PriorityQueue<>(Member::compareTo);
 		orderedMembers.addAll(Model.getInstance().getAllMembers());
-		for (Member m: orderedMembers) {
-			members_listview.getItems().add(createNewBorderPane(m));
+
+		int len = orderedMembers.size();
+		for (int i = 0; i < len; i++) {
+			Member m = orderedMembers.poll();
+			if (m != null)
+				members_listview.getItems().add(createNewBorderPane(m));
 		}
 	}
 
@@ -50,10 +55,25 @@ public class MembersController implements Initializable {
 		String username = username_textField.getText();
 		String password = password_textField.getText();
 		LocalDate date = LocalDate.now();
+
+		if (fName.isEmpty() || lName.isEmpty() || username.isEmpty() || password.isEmpty()) {
+			// Handle empty fields or invalid input
+			error_lbl.setStyle("-fx-text-fill: red");
+			error_lbl.setText("Please fill all fields.");
+			return;
+		}
+
+		if (Model.getInstance().getMemberUsernameHashSet().contains(username)) {
+			error_lbl.setStyle("-fx-text-fill: red");
+			error_lbl.setText("This username is already in use.\n Please choose a different username.");
+			return;
+		}
+
 		Model.getInstance().getDatabaseDriver().createNewMember(fName, lName, username, password, date);
 		emptyFields();
+		error_lbl.setStyle("-fx-text-fill: blue");
 		error_lbl.setText("Successfully registered!");
-		members_listview.getItems().add(createNewBorderPane(new Member(fName, lName, username, date)));
+		initMembers();
 	}
 
 	// Empty all text fields
@@ -78,15 +98,16 @@ public class MembersController implements Initializable {
 		HBox hBox_2 = new HBox();
 		Label date = new Label(m.dateProperty().getValue().toString() + "   ");
 		Button delete_btn = new Button("Delete");
+		delete_btn.setStyle("-fx-font-size: 10");
 		hBox_2.getChildren().addAll(date, delete_btn);
 		pane.setRight(hBox_2);
-		delete_btn.setOnAction(e -> deleteMember(m, pane));
+		delete_btn.setOnAction(e -> deleteMember(m));
 		return pane;
 	}
 
 	// Delete a member and update the database
-	private void deleteMember(Member m, BorderPane pane) {
+	private void deleteMember(Member m) {
 		m.delete();
-		members_listview.getItems().remove(pane);
+		initMembers();
 	}
 }

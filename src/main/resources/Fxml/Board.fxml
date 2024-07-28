@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="edu.northeastern.course.TheCodeCommandos.Controllers.BoardController">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.northeastern.course.TheCodeCommandos.Controllers.BoardController">
    <left>
         <fx:include source="Sidebar.fxml" />
     </left>
@@ -26,7 +26,7 @@
             <VBox layoutX="6.0" layoutY="6.0" prefHeight="200.0" prefWidth="100.0">
                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="To-do" />
                <HBox alignment="BOTTOM_LEFT" depthTest="DISABLE" prefHeight="30.0" prefWidth="100.0">
-                  <ListView fx:id="to_do_listview" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="200.0">
+                  <ListView fx:id="to_do_listview" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="280.0">
                      <HBox.margin>
                         <Insets bottom="10.0" top="10.0" />
                      </HBox.margin>
@@ -40,7 +40,7 @@
             <VBox layoutX="156.0" layoutY="7.0" prefHeight="200.0" prefWidth="100.0">
                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Doing" />
                <HBox alignment="BOTTOM_LEFT" prefHeight="30.0" prefWidth="100.0">
-                  <ListView fx:id="doing_listview" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="200.0">
+                  <ListView fx:id="doing_listview" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="280.0">
                      <HBox.margin>
                         <Insets bottom="10.0" top="10.0" />
                      </HBox.margin>

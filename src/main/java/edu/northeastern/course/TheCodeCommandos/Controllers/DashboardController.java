@@ -2,16 +2,13 @@ package edu.northeastern.course.TheCodeCommandos.Controllers;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.ResourceBundle;
 
 import edu.northeastern.course.TheCodeCommandos.Models.Board;
 import edu.northeastern.course.TheCodeCommandos.Models.Card;
-import edu.northeastern.course.TheCodeCommandos.Models.Member;
 import edu.northeastern.course.TheCodeCommandos.Models.Model;
 import javafx.beans.binding.Bindings;
-import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -36,7 +33,7 @@ public class DashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         bindData();
         initBoards();
-        initDoneCards();
+        initDueCards();
         create_new_board_btn.setOnAction(e -> toNewBoard());
         cards_listview.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
@@ -57,32 +54,44 @@ public class DashboardController implements Initializable {
 
     // Get boards from database and display them in the dashboard
     private void initBoards() {
+        boards_container.getChildren().clear();
+        boards_container.setHgap(10);
+        boards_container.setVgap(10);
+        boards_container.setPadding(new Insets(10, 10, 10, 10));
         Model.getInstance().getBoards().clear();
         Model.getInstance().setBoards();
         PriorityQueue<Board> orderedBoards = new PriorityQueue<>(Board::compareTo);
         orderedBoards.addAll(Model.getInstance().getBoards());
 
-        for (Board b: orderedBoards) {
-            VBox vBox = new VBox();
-            vBox.setPadding(new Insets(30, 30, 30, 30));
-            vBox.setStyle("-fx-border-color: black");
-            Label board_label = new Label(b.getBoardTitle());
-            Text description = new Text("\nDescription: " + b.getDescription() + "\n");
-            Text dueDate = new Text("Due date: " + b.dueDateProperty().getValue().toString());
-            vBox.getChildren().addAll(board_label, description, dueDate);
-            vBox.setOnMouseClicked(e -> toBoard(b.getBoardTitle()));
-            boards_container.getChildren().add(vBox);
+        int len = orderedBoards.size();
+        for (int i = 0; i < len; i++) {
+            Board b = orderedBoards.poll();
+            if (b != null) {
+                VBox vBox = new VBox();
+                vBox.setPadding(new Insets(25, 25, 25, 25));
+                vBox.setStyle("-fx-border-color: black");
+                Label board_label = new Label(b.getBoardTitle());
+                Text description = new Text("\nDescription: " + b.getDescription() + "\n");
+                Text dueDate = new Text("Due date: " + b.dueDateProperty().getValue().toString());
+                vBox.getChildren().addAll(board_label, description, dueDate);
+                vBox.setOnMouseClicked(e -> toBoard(b.getBoardTitle()));
+                boards_container.getChildren().add(vBox);
+            }
         }
     }
 
     // Get all the Done cards from database and display them in the listview
-    private void initDoneCards() {
-        Model.getInstance().getAllDoneCards().clear();
-        Model.getInstance().setAllDoneCards();
-        PriorityQueue<Card> orderedAllDoneCards = new PriorityQueue<>((a, b) -> b.compareTo(a));
-        orderedAllDoneCards.addAll(Model.getInstance().getAllDoneCards());
-        for (Card c: orderedAllDoneCards) {
-            cards_listview.getItems().add(c.getCardName());
+    private void initDueCards() {
+        Model.getInstance().getAllCards().clear();
+        Model.getInstance().setAllCards();
+        PriorityQueue<Card> orderedAllCards = new PriorityQueue<>(Card::compareTo);
+        orderedAllCards.addAll(Model.getInstance().getAllCards());
+
+        int len = orderedAllCards.size();
+        for (int i = 0; i < len; i++) {
+            Card c = orderedAllCards.poll();
+            if (c != null && !c.getStatus().equals("Done"))
+                cards_listview.getItems().add(c.getCardName());
         }
     }
 

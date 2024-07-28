@@ -25,6 +25,8 @@ public class Member implements Comparable<Member> {
 
     public String getLastName() {return lastName;}
 
+    public String getUsername() {return username;}
+
     public ObjectProperty<LocalDate> dateProperty() {return dateCreated;}
 
     public void delete() {
