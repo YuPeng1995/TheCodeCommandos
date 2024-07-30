@@ -67,7 +67,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>edu.northeastern.course.TheCodeCommandos/edu.northeastern.course.TheCodeCommandos.App</mainClass>
+                            <mainClass>edu.northeastern.course.TheCodeCommandos.App</mainClass>
                         </configuration>
                     </execution>
                 </executions>
