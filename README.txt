@@ -39,7 +39,7 @@ After starting the application, you can sign up for a new account or log in with
 
 Contact:
 TheCodeCommandos - peng.yu3@northeasten.edu
-GitHub - YuPeng1995
+GitHub - https://github.com/YuPeng1995/TheCodeCommandos
 
 Acknowledgements:
 JavaFX - The toolkit used for building the UI.
