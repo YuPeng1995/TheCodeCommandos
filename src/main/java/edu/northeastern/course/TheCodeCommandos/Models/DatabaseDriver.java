@@ -79,7 +79,8 @@ public class DatabaseDriver {
             e.printStackTrace();
         }
     }
-
+    
+    // Get all cards from the database
     public ResultSet getAllCards() {
         Statement statement;
         ResultSet resultSet = null;
@@ -109,7 +110,8 @@ public class DatabaseDriver {
             }
         }
     }
-
+    
+    // Delete a board from database
     public void deleteBoard(String boardName) {
         Statement statement;
         try {
@@ -134,7 +136,7 @@ public class DatabaseDriver {
         return resultSet;
     }
 
-    // Add cards in the database
+    // Add card in the database
     public void addCard(String cardName, String status, LocalDate date, String boardTitle) {
         Statement statement;
         try {
@@ -145,7 +147,8 @@ public class DatabaseDriver {
             e.printStackTrace();
         }
     }
-
+    
+    // Delete a card from database
     public void deleteCard(String cardName, String boardName) {
         Statement statement;
         try {

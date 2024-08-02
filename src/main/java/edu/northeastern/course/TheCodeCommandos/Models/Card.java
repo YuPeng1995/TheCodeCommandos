@@ -29,14 +29,17 @@ public class Card implements Comparable<Card> {
 
     public String getBoardForCard() {return board;}
 
+    // Set board for card
     public void setBoardForCard(String boardTitle) {
         this.board = boardTitle;
     }
-
+    
+    // Add a card
     public void add() {
         Model.getInstance().getDatabaseDriver().addCard(cardName, status, dueDate.get(), board);
     }
 
+    // Delete a card
     public void delete() {
         Model.getInstance().getDatabaseDriver().deleteCard(cardName, board);
     }

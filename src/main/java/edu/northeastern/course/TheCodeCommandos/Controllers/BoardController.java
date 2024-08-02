@@ -85,7 +85,8 @@ public class BoardController implements Initializable {
             }
         }
     }
-
+    
+    // Add card
     private void setAddCard() {
         add_to_do_text.setOnMouseClicked(e -> {
             Model.getInstance().getViewFactory().addCard().ifPresent(pair -> {
@@ -112,7 +113,8 @@ public class BoardController implements Initializable {
             populateLists();
         });
     }
-
+    
+    // Create new card
     private void createNewCard(String cardName, LocalDate dueDate, String status) {
         if (cardName.isEmpty() || dueDate == null) {
             card_error_lbl.setText("Please fill out all the input field.");
@@ -125,7 +127,8 @@ public class BoardController implements Initializable {
             new Card(cardName, status, dueDate, Model.getInstance().getCurrentBoard().getBoardTitle()).add();
         }
     }
-
+    
+    // Delete the project
     private void setDeleteBoard() {
         delete_project_btn.setOnAction(e -> {
             Model.getInstance().getCurrentBoard().delete();

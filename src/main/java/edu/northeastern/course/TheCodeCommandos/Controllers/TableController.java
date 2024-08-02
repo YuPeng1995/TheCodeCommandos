@@ -24,7 +24,8 @@ public class TableController implements Initializable {
         setupGridPaneTitle();
         setupChoiceBox();
     }
-
+    
+    // Create choice box
     private void setupChoiceBox() {
         Model.getInstance().getBoards().clear();
         Model.getInstance().setBoards();
@@ -34,7 +35,8 @@ public class TableController implements Initializable {
         }
         project_choicebox.valueProperty().addListener((observable, oldValue, newValue) -> setupGridPane(newValue));
     }
-
+    
+    // Create grid pane title
     private void setupGridPaneTitle() {
         Label card = new Label("Cards");
         card.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
@@ -49,7 +51,8 @@ public class TableController implements Initializable {
         cards_gridpane.setVgap(50);
         cards_gridpane.setPadding(new Insets(30, 40, 30, 40));
     }
-
+    
+    // Create the table
     private void setupGridPane(String boardTitle) {
         cards_gridpane.getChildren().clear();
         setupGridPaneTitle();

@@ -17,17 +17,19 @@ public class Board implements Comparable<Board> {
         this.dueDate = new SimpleObjectProperty<>(dueDate);
     }
 
-    // Four getter methods
+    // Three getter methods
     public String getBoardTitle() {return boardTitle;}
 
     public String getDescription() {return description;}
 
     public ObjectProperty<LocalDate> dueDateProperty() {return dueDate;}
 
+    // Add a board
     public void add() {
         Model.getInstance().getDatabaseDriver().createNewBoard(boardTitle, description, dueDate.get());
     }
 
+    // Delete a board
     public void delete() {
         Model.getInstance().getDatabaseDriver().deleteBoard(boardTitle);
     }

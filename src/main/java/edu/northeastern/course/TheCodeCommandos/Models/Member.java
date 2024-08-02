@@ -29,6 +29,7 @@ public class Member implements Comparable<Member> {
 
     public ObjectProperty<LocalDate> dateProperty() {return dateCreated;}
 
+    // Delete member
     public void delete() {
         Model.getInstance().getDatabaseDriver().deleteMember(username);
     }

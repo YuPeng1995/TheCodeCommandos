@@ -22,6 +22,7 @@ Clone the sample, open it with Eclipse, and make sure the paths for JDK and Java
 Click Run -> Run As -> Maven Build -> New launch configuration to create a new configuration. Name it TheCodeCommandos, and add the required goals:
 clean javafx:run
 Run the project Run -> Run As -> Maven Build -> TheCodeCommandos -> Run.
+Login using username "@yPeng10" and password"123".
 
 
 Database:

@@ -32,7 +32,6 @@ public class CalendarController {
         drawCalendar(currentYearMonth);
 
 
-        // 添加延迟加载样式表，以确保Scene已经存在
         dayContainer.sceneProperty().addListener((observable, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.getStylesheets().add(getClass().getResource("/styles/Calendar.css").toExternalForm());
@@ -51,7 +50,8 @@ public class CalendarController {
         currentYearMonth = currentYearMonth.plusMonths(1);
         drawCalendar(currentYearMonth);
     }
-
+    
+    // Create the calendar
     public void drawCalendar(YearMonth yearMonth) {
         Model.getInstance().getBoards().clear();
         Model.getInstance().getAllCards().clear();
@@ -63,7 +63,6 @@ public class CalendarController {
         int daysInMonth = yearMonth.lengthOfMonth();
         DayOfWeek firstDayOfWeek = firstDayOfMonth.getDayOfWeek();
 
-        // 添加星期几标签
         String[] daysOfWeek = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
         for (int i = 0; i < daysOfWeek.length; i++) {
             Label dayLabel = new Label(daysOfWeek[i]);
@@ -71,8 +70,8 @@ public class CalendarController {
             dayContainer.add(dayLabel, i, 0);
         }
 
-        int column = firstDayOfWeek.getValue() % 7; // 将星期一至星期日转化为0至6
-        int row = 1; // 从第1行开始，因为第0行显示星期几
+        int column = firstDayOfWeek.getValue() % 7;
+        int row = 1;
 
         for (int day = 1; day <= daysInMonth; day++) {
             LocalDate date = firstDayOfMonth.plusDays(day - 1);
@@ -81,13 +80,15 @@ public class CalendarController {
             dayContainer.add(dayBox, column, row);
 
             column++;
-            if (column == 7) { // 每行显示7天
+            if (column == 7) {
                 column = 0;
                 row++;
             }
         }
     }
-
+    
+    
+    // Create the daybox
     public VBox createDayBox(LocalDate date) {
         VBox dayBox = new VBox();
         dayBox.setSpacing(5);
@@ -99,7 +100,6 @@ public class CalendarController {
             dayLabel.getStyleClass().add("current-day");
         }
 
-        // Display event if exists
         Model.getInstance().setAllCards();
         for (Card c: Model.getInstance().getAllCards()) {
             if (c.dueDateProperty().getValue().equals(date)) {
@@ -126,7 +126,8 @@ public class CalendarController {
 
         return dayBox;
     }
-
+    
+    // Create event show dialog
     public void handleEventClick(LocalDate date) {
         Stage dialog = new Stage();
         dialog.setTitle("Boards/cards due on " + date.toString());

@@ -158,7 +158,8 @@ public class Model {
 	public void setCurrentBoard(Board currentBoard) {
 		this.currentBoard = currentBoard;
 	}
-
+	
+	// Set all cards
 	public void setAllCards() {
 		ResultSet resultSet = databaseDriver.getAllCards();
 		try {
@@ -174,11 +175,13 @@ public class Model {
 			e.printStackTrace();
 		}
 	}
-
+	
+	// Get all cards
 	public ObservableList<Card> getAllCards() {
 		return allCards;
 	}
-
+	
+	// Create HashSet by board title
 	public HashSet<String> getBoardTitleHashSet() {
 		HashSet<String> boardTitleHashSet = new HashSet<>();
 		for (Board board : boards) {
@@ -186,7 +189,8 @@ public class Model {
 		}
 		return boardTitleHashSet;
 	}
-
+	
+	// Create HashSet by card name
 	public HashSet<String> getCardNameHashSet() {
 		HashSet<String> cardNameHashSet = new HashSet<>();
 		for (Card c: getBoardCards()) {
@@ -194,7 +198,8 @@ public class Model {
 		}
 		return cardNameHashSet;
 	}
-
+	
+	// Create HashSet by username
 	public HashSet<String> getMemberUsernameHashSet() {
 		HashSet<String> memberUserHashSet = new HashSet<>();
 		for (Member m: getAllMembers()) {
